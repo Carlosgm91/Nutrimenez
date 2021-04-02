@@ -1,0 +1,102 @@
+﻿@*@model IEnumerable<Nutrimenez.Models.Consulta>*@
+@model PaginatedList<Nutrimenez.Models.Consulta>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Consultas</h1>
+
+<p>
+    <a asp-action="Create">Crear Nueva Consulta</a>
+</p>
+
+@* Agregar un cuadro de búsqueda en la vista Index de Avisos *@
+<form asp-action="Index">
+    <div class="form-actions no-color">
+        <p>
+            Nombre Usuario:
+            <input type="text" name="strCadenaBusqueda"
+                   value="@ViewData["BusquedaActual"]"
+                   class="form-control d-inline col-sm-3" />
+            &nbsp; &nbsp;
+            Tipo de Consulta:
+            <select name="intTipoConsultaId" asp-items="ViewBag.TipoConsultaId" class="form-control d-inline col-sm-3">
+                <option value="">Todas</option>
+            </select>
+            <input type="submit" value="Buscar" class="btn btn-default" /> |
+            <a asp-action="Index" class="btn btn-default">Lista completa</a>
+        </p>
+    </div>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Usuario
+                @*@Html.DisplayNameFor(model => model.Usuario)*@
+            </th>
+            <th>
+                Descripcion
+                @*@Html.DisplayNameFor(model => model.Descripcion)*@
+            </th>
+            <th>
+                Fecha de Consulta
+                @*@Html.DisplayNameFor(model => model.FechaAviso)*@
+            </th>
+            <th>
+                Tipo de Consulta
+                @*@Html.DisplayNameFor(model => model.TipoConsulta)*@
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Usuario.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Descripcion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FechaAviso)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TipoConsulta.Descripcion)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Detalle</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="d-print-none text-center">
+    <a class="btn btn-primary" href="javascript:window.print()">Imprimir</a>
+</div>
+
+
+@* Poner botones de página Siguiente y Anterior *@
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+<a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex - 1)"
+   asp-route-busquedaActual="@ViewData["BusquedaActual"]"
+   asp-route-tipoConsultaIdActual="@ViewData["TipoConsultaIdActual"]"
+   class="btn btn-outline-secondary @prevDisabled">
+    Anterior
+</a>
+<a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)"
+   asp-route-busquedaActual="@ViewData["BusquedaActual"]"
+   asp-route-tipoConsultaIdActual="@ViewData["TipoConsultaIdActual"]"
+   class="btn btn-outline-secondary @nextDisabled">
+    Siguiente
+</a>
